@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Гра "21"</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('jpg/fon.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    #game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: white;
+      max-width: 80%;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    #user-score, #comp-score {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    img {
+      width: 238px;
+      height: 362px;
+      margin: 10px;
+    }
+    .flex-container {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+    }
+    .flex-item {
+      text-align: center;
+    }
+
+    /* Медиа-запросы для адаптивности */
+    @media (max-width: 768px) {
+      #user-score, #comp-score {
+        font-size: 18px;
+        margin-bottom: 25px;
+      }
+      img {
+        width: 150px;
+        height: 228px;
+        margin: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <h2>Гра "21"</h2>
+    <div class="flex-container">
+      <div class="flex-item">
+        <h3 id="username-display"></h3>
+        <p id="user-score">0</p>
+        <img id="user-card" src="" alt="Карта користувача">
+      </div>
+      <div class="flex-item">
+        <h3>Комп'ютер</h3>
+        <p id="comp-score">0</p>
+        <img id="comp-card" src="" alt="Карта комп'ютера">
+      </div>
+    </div>
+    <button onclick="playRound()">Грати</button>
+  </div>
+
+  <script>
+    window.onload = function() {
+      const username = prompt("Введіть своє ім'я!");
+      document.getElementById("username-display").innerText = username || "Користувач";
+      displayRandomCards();
+    }
+
+    let userScore = 0;
+    let compScore = 0;
+
+    function playRound() {
+      displayRandomCards();
+
+      userScore += getCardValue(document.getElementById("user-card").src.split('/').pop());
+      compScore += getCardValue(document.getElementById("comp-card").src.split('/').pop());
+
+      document.getElementById("user-score").textContent = userScore;
+      document.getElementById("comp-score").textContent = compScore;
+
+      if (userScore >= 21 || compScore >= 21) {
+        determineWinner();
+      }
+    }
+    function determineWinner() {
+      let winner = "Комп'ютер";
+      if (userScore <= 21 && (userScore > compScore || compScore > 21)) {
+        winner = "Користувач";
+      }
+      alert(`Переміг: ${winner}`);
+      resetGame();
+    }
+
+    function displayRandomCards() {
+      const cards = ["6.png", "7.png", "8.png", "9.png", "10.png", "valet.jpg", "dama.jpg", "king.jpg", "tyz.png"];
+      const userCard = cards[Math.floor(Math.random() * cards.length)];
+      const compCard = cards[Math.floor(Math.random() * cards.length)];
+
+      document.getElementById("user-card").src = `./jpg/${userCard}`;
+      document.getElementById("comp-card").src = `./jpg/${compCard}`;
+    }
+
+    function getCardValue(card) {
+      if (card === "6.png") return 6;
+      if (card === "7.png") return 7;
+      if (card === "8.png") return 8;
+      if (card === "9.png") return 9;
+      if (card === "10.png") return 10;
+      if (card === "valet.jpg") return 2;
+      if (card === "dama.jpg") return 3;
+      if (card === "king.jpg") return 4;
+      if (card === "tyz.png") return 11;
+      return 0;
+    }
+     function resetGame() {
+      displayRandomCards();
+      userScore = 0;
+      compScore = 0;
+      document.getElementById("user-score").textContent = userScore;
+      document.getElementById("comp-score").textContent = compScore;
+    }
+  </script>
+</body>
+</html>
